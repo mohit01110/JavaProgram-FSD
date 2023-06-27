@@ -1,176 +1,208 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+
+class Product {
+    private String name;
+    private String specification;
+    private double cost;
+    private int quantity;
+
+    public Product(String name, String specification, double cost, int quantity) {
+        this.name = name;
+        this.specification = specification;
+        this.cost = cost;
+        this.quantity = quantity;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSpecification() {
+        return specification;
+    }
+
+    public void setSpecification(String specification) {
+        this.specification = specification;
+    }
+
+    public double getCost() {
+        return cost;
+    }
+
+    public void setCost(double cost) {
+        this.cost = cost;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void displayDetails() {
+        System.out.println("Product: " + name);
+        System.out.println("Specification: " + specification);
+        System.out.println("Cost: " + cost);
+        System.out.println("Quantity: " + quantity);
+    }
+}
+
+class Inventory {
+    private List<Product> products;
+
+    public Inventory() {
+        products = new ArrayList<>();
+    }
+
+    public void addProduct(Product product) {
+        products.add(product);
+    }
+
+    public void deleteProduct(Product product) {
+        products.remove(product);
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public int getProductCount(String productName) {
+        int count = 0;
+        for (Product product : products) {
+            if (product.getName().equalsIgnoreCase(productName)) {
+                count += product.getQuantity();
+            }
+        }
+        return count;
+    }
+}
 
 public class InventoryManagementSystem {
     public static void main(String[] args) {
-        String[] productNames = {
-                "Mobile",
-                "Laptop",
-                "Tablet",
-                "Portable HDD",
-                "Bluetooth Headphone",
-                "Smart-watch",
-                "Digital Camera",
-                "Portable Power bank",
-                "Printer",
-                "Wireless Router"
-        };
-
-        String[] specifications = {
-                "Specifications for Mobile",
-                "Specifications for Laptop",
-                "Specifications for Tablet",
-                "Specifications for Portable HDD",
-                "Specifications for Bluetooth Headphone",
-                "Specifications for Smart-watch",
-                "Specifications for Digital Camera",
-                "Specifications for Portable Power bank",
-                "Specifications for Printer",
-                "Specifications for Wireless Router"
-        };
-
-        double[] costs = {
-                100.0,
-                1000.0,
-                500.0,
-                80.0,
-                50.0,
-                200.0,
-                300.0,
-                30.0,
-                150.0,
-                80.0
-        };
-
-        int[] quantities = {
-                10,
-                5,
-                20,
-                15,
-                30,
-                25,
-                8,
-                12,
-                7,
-                10
-        };
-
+        Inventory inventory = new Inventory();
         Scanner scanner = new Scanner(System.in);
+        boolean exit = false;
 
-        while (true) {
-            System.out.println("------------------------------------------------------------");
-            System.out.println("Welcome to the SmartPoint Electronics Store");
-            System.out.println("------------------------------------------------------------");
-            System.out.println("1. View the complete list of our products");
-            System.out.println("2. Check the available count for a specific product");
-            System.out.println("3. View the specifications and details of a specific product");
-            System.out.println("4. Modify the details of a specific product");
-            System.out.println("5. Update the inventory for a specific product");
+        // Sample data
+        Product product1 = new Product("Laptop", "15-inch, 8GB RAM, 256GB SSD", 999.99, 5);
+        Product product2 = new Product("Smartphone", "6.5-inch, 128GB storage", 499.99, 10);
+        inventory.addProduct(product1);
+        inventory.addProduct(product2);
+
+        while (!exit) {
+            System.out.println("========= Inventory Management System =========");
+            System.out.println("1. Product List");
+            System.out.println("2. Product Count");
+            System.out.println("3. View Product Details");
+            System.out.println("4. Edit Product");
+            System.out.println("5. Update Inventory");
             System.out.println("6. Exit");
-            System.out.print("Please choose an option from the above menu: ");
+            System.out.print("Enter your choice: ");
             int choice = scanner.nextInt();
 
             switch (choice) {
                 case 1:
-                    System.out.println("------------------------------------------------------------");
-                    System.out.println("List of all Products");
-                    System.out.println("------------------------------------------------------------");
-                    System.out.println("Product ID   Product Name");
-                    for (int i = 0; i < productNames.length; i++) {
-                        System.out.printf("%10d   %s%n", (i + 101), productNames[i]);
+                    System.out.println("===== Product List =====");
+                    List<Product> productList = inventory.getProducts();
+                    for (Product product : productList) {
+                        System.out.println(product.getName());
                     }
                     break;
+
                 case 2:
-                    System.out.print("Enter the Product ID: ");
-                    int productId = scanner.nextInt();
-                    if (productId >= 101 && productId <= 110) {
-                        int index = productId - 101;
-                        System.out.println("------------------------------------------------------------");
-                        System.out.printf("%d%s%n", productId, productNames[index]);
-                        System.out.println("Total available count: " + quantities[index]);
-                    } else {
-                        System.out.println("Invalid Product ID!");
-                    }
+                    System.out.print("Enter product name: ");
+                    scanner.nextLine(); 
+                    String productName = scanner.nextLine();
+                    int productCount = inventory.getProductCount(productName);
+                    System.out.println("Total quantity of " + productName + ": " + productCount);
                     break;
+
                 case 3:
-                    System.out.print("Enter the Product ID: ");
-                    productId = scanner.nextInt();
-                    if (productId >= 101 && productId <= 110) {
-                        int index = productId - 101;
-                        System.out.println("------------------------------------------------------------");
-                        System.out.printf("%d%s%n", productId, productNames[index]);
-                        System.out.println("Total available count: " + quantities[index]);
-                        System.out.println(specifications[index]);
+                    System.out.print("Enter product name: ");
+                    scanner.nextLine(); 
+                    productName = scanner.nextLine();
+                    Product product = null;
+                    for (Product p : inventory.getProducts()) {
+                        if (p.getName().equalsIgnoreCase(productName)) {
+                            product = p;
+                            break;
+                        }
+                    }
+                    if (product != null) {
+                        product.displayDetails();
                     } else {
-                        System.out.println("Invalid Product ID!");
+                        System.out.println("Product not found.");
                     }
                     break;
+
                 case 4:
-                    System.out.print("Enter the Product ID: ");
-                    productId = scanner.nextInt();
-                    if (productId >= 101 && productId <= 110) {
-                        int index = productId - 101;
-                        System.out.println("------------------------------------------------------------");
-                        System.out.printf("%d%s%n", productId, productNames[index]);
-                        System.out.println("Total available count: " + quantities[index]);
-                        System.out.print("Enter new specifications: ");
-                        scanner.nextLine();
-                        String newSpecifications = scanner.nextLine();
-                        specifications[index] = newSpecifications;
-                        System.out.println("Specifications updated successfully!");
+                    System.out.print("Enter product name: ");
+                    scanner.nextLine(); /
+                    productName = scanner.nextLine();
+                    product = null;
+                    for (Product p : inventory.getProducts()) {
+                        if (p.getName().equalsIgnoreCase(productName)) {
+                            product = p;
+                            break;
+                        }
+                    }
+                    if (product != null) {
+                        System.out.print("Enter new product specification: ");
+                        String specification = scanner.nextLine();
+                        System.out.print("Enter new product cost: ");
+                        double cost = scanner.nextDouble();
+                        product.setSpecification(specification);
+                        product.setCost(cost);
+                        System.out.println("Product details updated successfully.");
                     } else {
-                        System.out.println("Invalid Product ID!");
+                        System.out.println("Product not found.");
                     }
                     break;
+
                 case 5:
-                    System.out.print("Enter the Product ID: ");
-                    productId = scanner.nextInt();
-                    if (productId >= 101 && productId <= 110) {
-                        int index = productId - 101;
-                        System.out.println("------------------------------------------------------------");
-                        System.out.printf("%d%s%n", productId, productNames[index]);
-                        System.out.println("Total available count: " + quantities[index]);
-                        System.out.println("1. Add inventory");
-                        System.out.println("2. Subtract inventory");
-                        System.out.print("Please choose an option from the above menu: ");
-                        int option = scanner.nextInt();
-                        if (option == 1) {
-                            System.out.print("Current available inventory for " + productNames[index] + ": " + quantities[index]);
-                            System.out.print("Please enter the count to be added: ");
-                            int countToAdd = scanner.nextInt();
-                            quantities[index] += countToAdd;
-                            System.out.println("Inventory updated successfully!");
-                        } else if (option == 2) {
-                            System.out.print("Current available inventory for " + productNames[index] + ": " + quantities[index]);
-                            System.out.print(" Please enter the count to be subtracted: ");
-                            int countToSubtract = scanner.nextInt();
-                            if (countToSubtract <= quantities[index]) {
-                                quantities[index] -= countToSubtract;
-                                System.out.println("Inventory updated successfully!");
-                            } else {
-                                System.out.println("Insufficient inventory to subtract!");
-                            }
+                    System.out.print("Enter product name: ");
+                    scanner.nextLine(); // Consume newline character
+                    productName = scanner.nextLine();
+                    product = null;
+                    for (Product p : inventory.getProducts()) {
+                        if (p.getName().equalsIgnoreCase(productName)) {
+                            product = p;
+                            break;
+                        }
+                    }
+                    if (product != null) {
+                        System.out.print("Enter quantity to add (positive) or delete (negative): ");
+                        int quantityChange = scanner.nextInt();
+                        int newQuantity = product.getQuantity() + quantityChange;
+                        if (newQuantity < 0) {
+                            System.out.println("Invalid operation. Quantity cannot be negative.");
                         } else {
-                            System.out.println("Invalid option!");
+                            product.setQuantity(newQuantity);
+                            System.out.println("Inventory updated successfully.");
                         }
                     } else {
-                        System.out.println("Invalid Product ID!");
+                        System.out.println("Product not found.");
                     }
                     break;
+
                 case 6:
-                    System.out.println("Thank you for visiting SmartPoint!");
-                    return;
+                    exit = true;
+                    System.out.println("Exiting Inventory Management System. Goodbye!");
+                    break;
+
                 default:
-                    System.out.println("Invalid option!");
+                    System.out.println("Invalid choice. Please try again.");
                     break;
             }
-
-            System.out.println("------------------------------------------------------------");
-            System.out.print("Enter 'Y' to return to the main menu or 'N' to Exit: ");
-            String input = scanner.next();
-            if (input.equalsIgnoreCase("N")) {
-                System.out.println("Thank you for visiting SmartPoint!");
-                break;
-            }
         }
+        scanner.close();
     }
 }
